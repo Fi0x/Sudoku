@@ -75,13 +75,14 @@ namespace Sudoku
                     inputNumbers[i][j] = number;
                 }
             }
-            int[][] resultNumbers = Solver.Solve(inputNumbers);
+            int[][] resultNumbers = new Solver().Solve(inputNumbers);
 
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    _button[i][j].Content = resultNumbers[i][j];
+                    if (resultNumbers[i][j] == 0) _button[i][j].Content = "";
+                    else _button[i][j].Content = resultNumbers[i][j];
                 }
             }
         }

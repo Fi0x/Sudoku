@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,9 +6,11 @@ namespace Sudoku.Calculators
 {
     public class Solver
     {
-        public static int[][] Solve(int[][] givenSudoku)
+        private List<int>[][] possibleNumbers;
+
+        public int[][] Solve(int[][] givenSudoku)
         {
-            List<int>[][] possibleNumbers = new List<int>[9][];
+            possibleNumbers = new List<int>[9][];
             for (int i = 0; i < 9; i++)
             {
                 possibleNumbers[i] = new List<int>[9];
@@ -25,6 +28,8 @@ namespace Sudoku.Calculators
                 }
             }
 
+            CheckColumns();
+
             int[][] returnSudoku = new int[9][];
             for (int i = 0; i < 9; i++)
             {
@@ -37,6 +42,24 @@ namespace Sudoku.Calculators
             }
 
             return returnSudoku;
+        }
+
+        private void CheckColumns()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (possibleNumbers[i][j].Count == 1)
+                    {
+                        for (int k = 0; k < 9; k++)
+                        {
+                            if(k == j) continue;
+                            if (possibleNumbers[i][k].Contains(possibleNumbers[i][j].ElementAt(0))) possibleNumbers[i][k].Remove(possibleNumbers[i][j].ElementAt(0));
+                        }
+                    }
+                }
+            }
         }
     }
 }
