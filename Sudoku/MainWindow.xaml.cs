@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Sudoku.Calculators;
 
 namespace Sudoku
 {
@@ -9,12 +10,15 @@ namespace Sudoku
     /// </summary>
     public partial class MainWindow
     {
+        private Button[][] _button;
         public MainWindow()
         {
             InitializeComponent();
-            
+
+            _button = new Button[9][];
             for (int x = 0; x < 9; x++)
             {
+                _button[x] = new Button[9];
                 for (int y = 0; y < 9; y++)
                 {
                     Button btn = new Button();
@@ -31,10 +35,12 @@ namespace Sudoku
                     if (y % 3 == 2) bottomMargin = 3;
                     
                     btn.Margin = new Thickness(leftMargin, topMargin, rightMargin, bottomMargin);
-
+                    
                     GridSudoku.Children.Add(btn);
                     Grid.SetColumn(btn, x);
                     Grid.SetRow(btn, y);
+
+                    _button[x][y] = btn;
                 }
             }
         }
@@ -45,11 +51,8 @@ namespace Sudoku
             int.TryParse(original, out result);
 
             result++;
-            if (result > 9)
-            {
-                return "";
-            }
-
+            if (result > 9) return "";
+            
             return result.ToString();
         }
 
@@ -57,6 +60,30 @@ namespace Sudoku
         {
             Button currentButton = (sender as Button);
             currentButton.Content = increaseNumber(currentButton.Content.ToString());
+        }
+
+        private void btnSolve_OnClick(object sender, RoutedEventArgs e)
+        {
+            int[][] inputNumbers = new int[9][];
+            for (int i = 0; i < 9; i++)
+            {
+                inputNumbers[i] = new int[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    int number;
+                    int.TryParse(_button[i][j].Content.ToString(), out number);
+                    inputNumbers[i][j] = number;
+                }
+            }
+            int[][] resultNumbers = Solver.Solve(inputNumbers);
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    _button[i][j].Content = resultNumbers[i][j];
+                }
+            }
         }
     }
 }
