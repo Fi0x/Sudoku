@@ -28,6 +28,7 @@ namespace Sudoku.Calculators
             }
 
             CheckColumns();
+            CheckRows();
 
             int[][] returnSudoku = new int[9][];
             for (int i = 0; i < 9; i++)
@@ -55,6 +56,23 @@ namespace Sudoku.Calculators
                         {
                             if(k == j) continue;
                             if (_possibleNumbers[i][k].Contains(_possibleNumbers[i][j].ElementAt(0))) _possibleNumbers[i][k].Remove(_possibleNumbers[i][j].ElementAt(0));
+                        }
+                    }
+                }
+            }
+        }
+        private void CheckRows()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (_possibleNumbers[j][i].Count == 1)
+                    {
+                        for (int k = 0; k < 9; k++)
+                        {
+                            if(k == j) continue;
+                            if (_possibleNumbers[k][i].Contains(_possibleNumbers[j][i].ElementAt(0))) _possibleNumbers[k][i].Remove(_possibleNumbers[j][i].ElementAt(0));
                         }
                     }
                 }
