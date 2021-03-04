@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Sudoku.Calculators
@@ -30,6 +31,9 @@ namespace Sudoku.Calculators
             CheckSquares();
             CheckColumns();
             CheckRows();
+            CheckNumberPerSquare();
+            CheckNumberPerColumn();
+            CheckNumberPerRow();
 
             int[][] returnSudoku = new int[9][];
             for (int i = 0; i < 9; i++)
@@ -107,6 +111,105 @@ namespace Sudoku.Calculators
                                 if (_possibleNumbers[squareX + fieldX][squareY + fieldY].Count == 1) continue;
                                 _possibleNumbers[squareX + fieldX][squareY + fieldY].Remove(num);
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CheckNumberPerColumn()
+        {
+            for (int x = 0; x < 9; x++)
+            {
+                for (int number = 1; number <= 9; number++)
+                {
+                    int foundY = 9;
+                    for (int y = 0; y < 9; y++)
+                    {
+                        if (_possibleNumbers[x][y].Contains(number))
+                        {
+                            if (foundY == 9) foundY = y;
+                            else
+                            {
+                                foundY = 9;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (foundY != 9)
+                    {
+                        _possibleNumbers[x][foundY].Clear();
+                        _possibleNumbers[x][foundY].Add(number);
+                    }
+                }
+            }
+        }
+
+        private void CheckNumberPerRow()
+        {
+            for (int y = 0; y < 9; y++)
+            {
+                for (int number = 1; number <= 9; number++)
+                {
+                    int foundX = 9;
+                    for (int x = 0; x < 9; x++)
+                    {
+                        if (_possibleNumbers[x][y].Contains(number))
+                        {
+                            if (foundX == 9) foundX = x;
+                            else
+                            {
+                                foundX = 9;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (foundX != 9)
+                    {
+                        _possibleNumbers[foundX][y].Clear();
+                        _possibleNumbers[foundX][y].Add(number);
+                    }
+                }
+            }
+        }
+
+        private void CheckNumberPerSquare()
+        {
+            for (var squareX = 0; squareX < 9; squareX += 3)
+            {
+                for (var squareY = 0; squareY < 9; squareY += 3)
+                {
+                    for (int number = 1; number <= 9; number++)
+                    {
+                        int foundX = 3;
+                        int foundY = 3;
+                        for (int fieldX = 0; fieldX < 3; fieldX++)
+                        {
+                            for (int fieldY = 0; fieldY < 3; fieldY++)
+                            {
+                                if (_possibleNumbers[squareX + fieldX][squareY + fieldY].Contains(number))
+                                {
+                                    if (foundX == 3)
+                                    {
+                                        foundX = fieldX;
+                                        foundY = fieldY;
+                                    }
+                                    else
+                                    {
+                                        foundX = -1;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(foundX == -1) break;
+                        }
+
+                        if (foundX != -1)
+                        {
+                            _possibleNumbers[squareX + foundX][squareY + foundY].Clear();
+                            _possibleNumbers[squareX + foundX][squareY + foundY].Add(number);
                         }
                     }
                 }
