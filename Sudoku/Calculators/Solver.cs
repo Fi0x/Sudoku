@@ -27,6 +27,7 @@ namespace Sudoku.Calculators
                 }
             }
 
+            CheckSquares();
             CheckColumns();
             CheckRows();
 
@@ -54,13 +55,15 @@ namespace Sudoku.Calculators
                     {
                         for (int k = 0; k < 9; k++)
                         {
-                            if(k == j) continue;
+                            if (k == j) continue;
+                            if(_possibleNumbers[i][k].Count == 1) continue;
                             if (_possibleNumbers[i][k].Contains(_possibleNumbers[i][j].ElementAt(0))) _possibleNumbers[i][k].Remove(_possibleNumbers[i][j].ElementAt(0));
                         }
                     }
                 }
             }
         }
+
         private void CheckRows()
         {
             for (int i = 0; i < 9; i++)
@@ -71,8 +74,39 @@ namespace Sudoku.Calculators
                     {
                         for (int k = 0; k < 9; k++)
                         {
-                            if(k == j) continue;
+                            if (k == j) continue;
+                            if(_possibleNumbers[k][i].Count == 1) continue;
                             if (_possibleNumbers[k][i].Contains(_possibleNumbers[j][i].ElementAt(0))) _possibleNumbers[k][i].Remove(_possibleNumbers[j][i].ElementAt(0));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CheckSquares()
+        {
+            for (var squareX = 0; squareX < 9; squareX += 3)
+            {
+                for (var squareY = 0; squareY < 9; squareY += 3)
+                {
+                    List<int> containedNumbers = new List<int>();
+                    for (var fieldX = 0; fieldX < 3; fieldX++)
+                    {
+                        for (var fieldY = 0; fieldY < 3; fieldY++)
+                        {
+                            if (_possibleNumbers[squareX + fieldX][squareY + fieldY].Count == 1) containedNumbers.Add(_possibleNumbers[squareX + fieldX][squareY + fieldY].ElementAt(0));
+                        }
+                    }
+
+                    foreach (var num in containedNumbers)
+                    {
+                        for (var fieldX = 0; fieldX < 3; fieldX++)
+                        {
+                            for (var fieldY = 0; fieldY < 3; fieldY++)
+                            {
+                                if (_possibleNumbers[squareX + fieldX][squareY + fieldY].Count == 1) continue;
+                                _possibleNumbers[squareX + fieldX][squareY + fieldY].Remove(num);
+                            }
                         }
                     }
                 }
