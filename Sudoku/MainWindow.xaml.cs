@@ -10,6 +10,7 @@ namespace Sudoku
     /// </summary>
     public partial class MainWindow
     {
+        private Solver _solver = new Solver();
         private Button[][] _button;
         public MainWindow()
         {
@@ -59,30 +60,43 @@ namespace Sudoku
         private void BtnSudoku_OnClick(object sender, RoutedEventArgs e)
         {
             Button currentButton = (sender as Button);
+            if(currentButton == null) return;
             currentButton.Content = increaseNumber(currentButton.Content.ToString());
         }
 
         private void btnSolve_OnClick(object sender, RoutedEventArgs e)
         {
             int[][] inputNumbers = new int[9][];
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
                 inputNumbers[i] = new int[9];
-                for (int j = 0; j < 9; j++)
+                for (var j = 0; j < 9; j++)
                 {
                     int number;
                     int.TryParse(_button[i][j].Content.ToString(), out number);
                     inputNumbers[i][j] = number;
                 }
             }
-            int[][] resultNumbers = new Solver().Solve(inputNumbers);
+            int[][] resultNumbers = _solver.Solve(inputNumbers);
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 9; j++)
+                for (var j = 0; j < 9; j++)
                 {
                     if (resultNumbers[i][j] == 0) _button[i][j].Content = "";
                     else _button[i][j].Content = resultNumbers[i][j];
+                }
+            }
+        }
+
+        private void btnClear_OnClick(object sender, RoutedEventArgs e)
+        {
+            _solver = new Solver();
+            for (int x = 0; x < 9; x++)
+            {
+                for (int y = 0; y < 9; y++)
+                {
+                    _button[x][y].Content = "";
                 }
             }
         }

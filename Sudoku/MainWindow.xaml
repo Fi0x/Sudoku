@@ -45,15 +45,27 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
         </Grid>
-        <Button Content="Solve"
-                Click="btnSolve_OnClick"
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Solve"
+                    Click="btnSolve_OnClick"
+                    FontSize="40"
+                    Foreground="Black"
+                    Background="Green"
+                    Margin="0, 0, 5, 0"
+                    FontWeight="Bold"
+                    Grid.Column="0"/>
+        <Button Content="Clear"
+                Click="btnClear_OnClick"
                 FontSize="40"
                 Foreground="Black"
-                Background="Brown"
-                Padding="20, 0, 20, 0"
+                Background="Red"
+                Margin="0, 0, 5, 0"
                 FontWeight="Bold"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Grid.Row="2"/>
+                Grid.Column="1"/>
+        </Grid>
     </Grid>
 </Window>
